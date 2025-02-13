@@ -1,0 +1,1797 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Weekly Diet Plan</title>
+    <style>
+        /* Default styles should be mobile-first */
+
+        General styles body {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        /* Tablets (landscape) */
+        @media (max-width: 1024px) {
+            .container {
+                width: 90%;
+                padding: 15px;
+            }
+
+            .diet-table {
+                font-size: 14px;
+            }
+        }
+
+        /* Tablets (portrait) and small laptops */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 10px;
+            }
+
+            .diet-table {
+                font-size: 13px;
+            }
+
+            .diet-table th,
+            .diet-table td {
+                padding: 8px;
+            }
+        }
+
+        /* Mobile devices */
+        @media (max-width: 480px) {
+            .container {
+                width: 100%;
+                padding: 5px;
+            }
+
+            .diet-table {
+                font-size: 12px;
+            }
+
+            .diet-table th,
+            .diet-table td {
+                padding: 5px;
+                display: block;
+                text-align: left;
+            }
+
+            .diet-table thead {
+                display: none;
+            }
+
+            .diet-table tr {
+                display: flex;
+                flex-direction: column;
+                border-bottom: 1px solid #ddd;
+                margin-bottom: 10px;
+                padding: 10px;
+            }
+        }
+
+
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 5px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            background-color: #f2f2f2;
+            border-radius: 5px;
+        }
+
+        .tab.active {
+            background-color: white;
+            font-weight: bold;
+            border-bottom: 2px solid #007bff;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .monday {
+            background-color: #ffeeba;
+        }
+
+        .tuesday {
+            background-color: #d4edda;
+        }
+
+        .wednesday {
+            background-color: #cce5ff;
+        }
+
+        .thursday {
+            background-color: #f5c6cb;
+        }
+
+        .friday {
+            background-color: #c3e6cb;
+        }
+
+        .saturday {
+            background-color: #bee5eb;
+        }
+
+        .sunday {
+            background-color: #f8d7da;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .total-row {
+            background-color: #e0dddd;
+            font-weight: bold;
+        }
+
+        .empty-row {
+            height: 10px;
+            background-color: #ffffff;
+            border: none;
+        }
+
+        .hints {
+            background-color: #f9f9f9;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 5px;
+        }
+
+        .hints h3 {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .hints ul {
+            list-style-type: square;
+        }
+
+        .hints li {
+            margin: 5px 0;
+        }
+
+        .search-container {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .search-container input {
+            padding: 8px;
+            width: 80%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 15px;
+            margin-top: 20px;
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        /* Accordion Styling */
+        .recipe-item {
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .recipe-title {
+            cursor: pointer;
+            font-weight: bold;
+            color: #007bff;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .recipe-title::after {
+            content: "▼";
+            font-size: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .recipe-title.active::after {
+            content: "▲";
+        }
+
+        .recipe-details {
+            display: none;
+            padding: 10px 15px;
+            background-color: #f9f9f9;
+            border-top: 1px solid #ddd;
+        }
+
+        .recipe-details.active {
+            display: block;
+        }
+
+        .recipe-details h4 {
+            margin-top: 10px;
+            color: #007bff;
+        }
+
+        .recipe-details ul,
+        .recipe-details ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .recipe-details ul li,
+        .recipe-details ol li {
+            margin: 5px 0;
+        }
+
+        /* Unique color for the "View Recipes" tab */
+        .tab.view-recipes {
+            background-color: #1f5e58;
+            /* Warm orange color */
+            color: white;
+            /* White text for better contrast */
+            border: 1px solid #eb991f;
+            /* Slightly darker border */
+        }
+
+        /* Add a food icon (fork and knife) */
+        .tab.view-recipes::before {
+            content: "🍲";
+            /* Fork and knife emoji */
+            margin-right: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Weekly South Indian Diet Plan</h1>
+        <!-- Tabs -->
+        <div class="tabs" id="tabs-container"></div>
+        <!-- Diet Plan Content -->
+        <div id="diet-content"></div>
+
+        <!-- Recipes Tab Content -->
+        <div id="recipes-content" class="tab-content">
+            <div class="search-container">
+                <input type="text" id="recipe-search" placeholder="Search recipes..." oninput="filterRecipes()">
+            </div>
+            <div class="recipe-container" id="recipe-container"></div>
+        </div>
+
+        <div class="hints">
+            <h3>🔥 Diet Tips to Follow</h3>
+            <ul>
+                <li>Drink plenty of water(3 liters) throughout the day to stay hydrated.</li>
+                <li>Avoid fried and high-fat foods, especially processed oils and sweets.</li>
+                <li>Incorporate more vegetables and fruits in your meals for fiber and essential vitamins.</li>
+                <li>Try to have a balanced portion of carbs, protein, and healthy fats in each meal.</li>
+                <li>Include a source of protein like boiled eggs, fish, or legumes in your meals.</li>
+                <li>Try to avoid late-night snacks and eat dinner at least 2-3 hours before bedtime.</li>
+                <li>Monitor your portion sizes to maintain a calorie deficit for weight loss.</li>
+                <li>Exercise for at least 30 minutes daily.</li>
+            </ul>
+        </div>
+
+        <div class="hints">
+            <h2>Daily Detox Plan for Weight Loss & Liver Health</h2>
+
+            <h3>🌞 Morning (Empty Stomach)</h3>
+            <p><strong>Drink:</strong> Warm Lemon-Turmeric Water</p>
+            <ul>
+                <li>250ml warm water</li>
+                <li>1/2 tsp turmeric powder</li>
+                <li>1/2 lemon (juiced)</li>
+                <li>A pinch of black pepper</li>
+                <li>1 tsp honey (optional)</li>
+            </ul>
+            <p><strong>Benefit:</strong> Detoxifies liver, improves digestion, boosts metabolism.</p>
+
+            <h3>🍽️ Before Lunch/Dinner</h3>
+            <p><strong>Drink:</strong> Cinnamon-Ginger Fat Cutter Drink</p>
+            <ul>
+                <li>250ml warm water</li>
+                <li>1/2 tsp cinnamon powder (or small cinnamon stick)</li>
+                <li>1/2 tsp grated ginger</li>
+                <li>1 tsp apple cider vinegar (optional)</li>
+                <li>1 tsp honey (optional)</li>
+            </ul>
+            <p><strong>Benefit:</strong> Burns belly fat, reduces cravings, improves metabolism.</p>
+
+            <h3>🌙 Night (30 Minutes Before Sleep)</h3>
+            <p><strong>Drink:</strong> Cumin-Fennel Herbal Tea</p>
+            <ul>
+                <li>250ml warm water</li>
+                <li>1/2 tsp cumin seeds</li>
+                <li>1/2 tsp fennel seeds</li>
+                <li>1 small piece of ginger (grated)</li>
+                <li>A pinch of cinnamon (optional)</li>
+            </ul>
+            <p><strong>Benefit:</strong> Improves digestion, reduces bloating, promotes restful sleep.</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        © 2025 Karthik. All rights reserved.
+    </div>
+
+    <script>
+        // Diet Plan Data
+        const dietPlans = {
+            "Soya South": {
+                "Monday": [
+                    ["Breakfast", "Idli with coconut chutney & soya", "2 idli (100 g) + 20 g chutney + 10 g soya", 220, 10, 5, 2],
+                    ["Mid-Morning", "Guava", "100 g", 68, 1, 0.5, 5.5],
+                    ["Lunch", "Brown rice, sambar, mixed vegetable curry", "150 g rice + 200 ml sambar + 100 g veg", 420, 20, 6, 8],
+                    ["Evening Snack", "Roasted chana & groundnuts", "30 g", 150, 7, 8, 4],
+                    ["Dinner", "Vegetable upma with soya chunks & chutney", "150 g + 10 g soya + 20 g chutney", 300, 15, 7, 4]
+                ],
+                "Tuesday": [
+                    ["Breakfast", "Ragi dosa with tomato chutney", "2 dosa (150 g) + 20 g chutney", 250, 12, 6, 3],
+                    ["Mid-Morning", "Buttermilk", "200 ml", 50, 2.5, 1.5, 0.5],
+                    ["Lunch", "Fish curry, brown rice, vegetable stir-fry with soya", "100 g fish + 150 g rice + 15 g soya + 100 g veg", 470, 38, 7, 7],
+                    ["Evening Snack", "Groundnuts (roasted)", "20 g", 120, 6, 9, 2.5],
+                    ["Dinner", "Ragi dosa with greens curry(palak/Methi/Moringa)", "2 dosa (200 g) + 150 ml curry", 320, 18, 5, 6]
+                ],
+                "Wednesday": [
+                    ["Breakfast", "Pongal (rice & moong dal)", "200 g", 350, 18, 8, 5],
+                    ["Mid-Morning", "Papaya", "100 g", 43, 0.5, 0, 2.5],
+                    ["Lunch", "Millet rice, rasam, mixed veg curry with soya", "150 g rice + 150 ml rasam + 15 g soya + 100 g veg", 400, 22, 7, 6],
+                    ["Evening Snack", "Tender coconut water & roasted groundnuts", "200 ml + 20 g", 120, 10, 4, 3],
+                    ["Dinner", "Dosa with vegetable sambar", "2 dosa (150 g) + 100 ml sambar", 350, 18, 6, 6]
+                ],
+                "Thursday": [
+                    ["Breakfast", "Egg dosa with tomato chutney", "2 dosa (150 g) + 20 g chutney", 320, 18, 9, 4],
+                    ["Mid-Morning", "Apple", "100 g", 52, 0.3, 0, 2.5],
+                    ["Lunch", "Chicken curry, brown rice, beans & soya", "100 g chicken + 150 g rice + 15 g soya + 100 g beans", 470, 38, 8, 7],
+                    ["Evening Snack", "Masala buttermilk", "200 ml", 50, 2.5, 1.5, 0.5],
+                    ["Dinner", "Vegetable pulao & cucumber raita", "200 g pulao + 100 ml raita", 320, 20, 7, 6]
+                ],
+                "Friday": [
+                    ["Breakfast", "Upma with vegetable chutney & soya", "200 g + 10 g soya + 20 g chutney", 300, 16, 7, 5],
+                    ["Mid-Morning", "Orange", "100 g", 47, 1, 0.1, 2.5],
+                    ["Lunch", "Red rice, rasam, okra fry with soya", "150 g rice + 150 ml rasam + 10 g soya + 100 g veg", 400, 20, 7, 6],
+                    ["Evening Snack", "Roasted chana", "30 g", 150, 10, 5, 4],
+                    ["Dinner", "Ragi dosa with mint chutney", "2 dosa (150 g) + 20 g chutney", 350, 18, 6, 5]
+                ],
+                "Saturday": [
+                    ["Breakfast", "Pesarattu (green gram dosa) & chutney", "2 dosa (150 g) + 20 g chutney", 310, 15, 7, 4],
+                    ["Mid-Morning", "Watermelon", "150 g", 45, 0.5, 0, 0.8],
+                    ["Lunch", "Millet rice, dal, stir-fried cabbage with soya", "150 g rice + 100 g dal + 10 g soya + 100 g veg", 400, 20, 7, 6],
+                    ["Evening Snack", "Sprout salad", "50 g", 100, 10, 1, 4],
+                    ["Dinner", "Vegetable idiyappam", "150 g + 100 g kurma", 350, 20, 6, 6]
+                ],
+                "Sunday": [
+                    ["Breakfast", "Egg dosa with onion chutney", "2 dosa (150 g) + 20 g chutney", 320, 18, 9, 4],
+                    ["Mid-Morning", "Pomegranate", "100 g", 83, 1.5, 0.5, 3],
+                    ["Lunch", "Fish curry, red rice, spinach", "100 g fish + 150 g rice + 100 g spinach", 450, 40, 9, 7],
+                    ["Evening Snack", "Tender coconut water & roasted nuts", "200 ml + 20 g", 120, 10, 3.5, 3],
+                    ["Dinner", "Chapati with chicken curry", "2 chapati (100 g) + 100 g curry", 350, 25, 10, 6]
+                ]
+            },
+            "Healthy South": { "Monday": [["Breakfast", "Pongal + Coconut chutney + 1 boiled egg", "200 + 50", 350, 15, 8, 4], ["Mid-Morning", "1 small apple + 10 almonds", "100 + 10", 150, 3, 8, 5], ["Lunch", "Brown rice + Sambar + Beetroot poriyal + Curd", "150 + 100 + 100 + 100", 450, 18, 6, 8], ["Evening Snack", "Green tea + Roasted chana", "200 + 30", 100, 5, 2, 3], ["Dinner", "Chapati (2) + Lauki curry + Curd", "60 + 150 + 100", 350, 12, 6, 6]], "Tuesday": [["Breakfast", "Idli (4) with mint chutney + 1 boiled egg", "150 + 50", 300, 15, 5, 4], ["Mid-Morning", "1 orange + 1 tsp flaxseeds", "100 + 5", 100, 2, 3, 4], ["Lunch", "Brown rice + Fish curry (1 piece) + Cabbage thoran + Curd", "150 + 100 + 100 + 100", 500, 25, 10, 6], ["Evening Snack", "Buttermilk + Peanuts", "200 + 20", 150, 6, 8, 3], ["Dinner", "Quinoa upma + Curd", "200 + 100", 350, 12, 6, 6]], "Wednesday": [["Breakfast", "Ragi dosa (2) with tomato chutney + 1 boiled egg", "150 + 50", 350, 15, 7, 6], ["Mid-Morning", "1 small banana + 1 tsp chia seeds", "100 + 5", 120, 2, 3, 5], ["Lunch", "Millet rice + Avial + Cucumber raita", "150 + 150 + 100", 400, 12, 6, 8], ["Evening Snack", "Green tea + Pumpkin seeds", "200 + 20", 100, 5, 5, 3], ["Dinner", "Chapati (2) + Spinach dal + Steamed broccoli", "60 + 150 + 100", 350, 15, 6, 7]], "Thursday": [["Breakfast", "Oats upma + Coconut chutney + 1 boiled egg", "200 + 50", 350, 15, 7, 6], ["Mid-Morning", "1 guava + 10 almonds", "100 + 10", 150, 3, 8, 5], ["Lunch", "Brown rice + Chicken curry + Carrot beans poriyal + Curd", "150 + 100 + 100 + 100", 500, 25, 10, 6], ["Evening Snack", "Buttermilk (1 glass) + 1 small handful of roasted chana", "200 + 30", 150, 6, 5, 4], ["Dinner", "Quinoa khichdi + Curd", "200 + 100", 350, 15, 6, 7]], "Friday": [["Breakfast", "Poha (flattened rice, veggies, peanuts) + Coconut chutney + 1 boiled egg", "200 + 50", 350, 15, 7, 5], ["Mid-Morning", "1 small apple + 1 tsp flaxseeds", "100 + 5", 120, 2, 3, 5], ["Lunch", "Brown rice + Sambar (toor dal, veggies) + Okra fry + Curd", "150 + 100 + 100 + 100", 450, 18, 6, 8], ["Evening Snack", "Green tea + 1 small handful of sunflower seeds", "200 + 20", 100, 4, 5, 3], ["Dinner", "Chapati (2) + Lauki (bottle gourd) curry + Steamed carrots", "60 + 150 + 100", 350, 12, 6, 7]], "Saturday": [["Breakfast", "Ragi dosa (2) with mint chutney + 1 boiled egg", "150 + 50", 350, 15, 7, 6], ["Mid-Morning", "1 orange + 10 almonds", "100 + 10", 150, 3, 8, 5], ["Lunch", "Millet rice + Sambar (toor dal, veggies) + Beetroot poriyal + Curd", "150 + 100 + 100 + 100", 450, 18, 6, 8], ["Evening Snack", "Buttermilk (1 glass) + 1 small handful of peanuts", "200 + 20", 150, 6, 8, 3], ["Dinner", "Quinoa upma (veggies, quinoa) + Curd", "200 + 100", 350, 12, 6, 6]], "Sunday": [["Breakfast", "Idli (4) with tomato chutney + 1 boiled egg", "150 + 50", 300, 15, 5, 4], ["Mid-Morning", "1 guava + 1 tsp chia seeds", "100 + 5", 120, 2, 3, 5], ["Lunch", "Brown rice + Fish curry (1 piece) + Cabbage thoran + Curd", "150 + 100 + 100 + 100", 500, 25, 10, 6], ["Evening Snack", "Green tea + 1 small handful of roasted chana", "200 + 30", 100, 5, 2, 3], ["Dinner", "Chapati (2) + Spinach dal + Steamed broccoli", "60 + 150 + 100", 350, 15, 6, 7]] },
+            "Lean Liver": {
+                "Monday": [
+                    ["Breakfast", "Pongal + Coconut chutney + 1 boiled egg", "200g + 50g", 350, 15, 8, 4],
+                    ["Mid-Morning", "1 small apple (100g) + 10 almonds (10g)", "100g + 10g", 138, 3, 8, 5], // Corrected: 10 almonds (not 15)
+                    ["Lunch", "Brown rice (100g) + Sambar with soya chunks (30g) + Beetroot poriyal + Curd", "100g + 150g + 100g + 100g", 445, 25, 6, 9], // Adjusted protein
+                    ["Evening Snack", "Green tea + Roasted chana (30g)", "200ml + 30g", 100, 5, 2, 3],
+                    ["Dinner", "Chapati (2) + Lauki curry + Curd", "60g + 150g + 100g", 350, 12, 6, 6]
+                ],
+                "Tuesday": [
+                    ["Breakfast", "Idli (4) with mint chutney + 1 boiled egg", "150g + 50g", 300, 15, 5, 4],
+                    ["Mid-Morning", "1 orange (100g) + 1 tsp flaxseeds (5g)", "100g + 5g", 100, 2, 3, 4],
+                    ["Lunch", "Brown rice (100g) + Fish curry (100g) + Cabbage thoran + Curd", "100g + 100g + 100g + 100g", 480, 28, 10, 8], // Fish added
+                    ["Evening Snack", "Buttermilk (200ml) + Peanuts (20g)", "200ml + 20g", 150, 6, 8, 3],
+                    ["Dinner", "Quinoa upma (200g) + Curd", "200g + 100g", 350, 12, 6, 6]
+                ],
+                "Wednesday": [
+                    ["Breakfast", "Ragi dosa (2) with tomato chutney + 1 boiled egg", "150g + 50g", 350, 15, 7, 6],
+                    ["Mid-Morning", "1 small banana (100g) + 1 tsp chia seeds (5g)", "100g + 5g", 120, 2, 3, 5],
+                    ["Lunch", "Millet rice (100g) + Avial (150g) + Cucumber raita", "100g + 150g + 100g", 400, 12, 6, 8],
+                    ["Evening Snack", "Green tea + Pumpkin seeds (20g)", "200ml + 20g", 100, 5, 5, 3],
+                    ["Dinner", "Chapati (2) + Spinach dal (150g) + Steamed broccoli (100g)", "60g + 150g + 100g", 360, 15, 6, 8]
+                ],
+                "Thursday": [
+                    ["Breakfast", "Oats upma (200g) + Coconut chutney + 1 boiled egg", "200g + 50g", 350, 15, 7, 6],
+                    ["Mid-Morning", "1 guava (100g) + 10 almonds (10g)", "100g + 10g", 138, 3, 8, 5], // Corrected almonds
+                    ["Lunch", "Brown rice (100g) + Soya chunk curry (50g) + Carrot beans poriyal + Curd", "100g + 50g + 100g + 100g", 480, 30, 8, 10], // Chicken replaced with soya
+                    ["Evening Snack", "Buttermilk (200ml) + Roasted chana (30g)", "200ml + 30g", 150, 6, 5, 4],
+                    ["Dinner", "Quinoa khichdi (200g) + Curd", "200g + 100g", 350, 15, 6, 7]
+                ],
+                "Friday": [
+                    ["Breakfast", "Poha (100g) with veggies + Coconut chutney + 1 boiled egg", "100g + 50g", 350, 15, 7, 5],
+                    ["Mid-Morning", "1 small apple (100g) + 1 tsp flaxseeds (5g)", "100g + 5g", 120, 2, 3, 5],
+                    ["Lunch", "Brown rice (100g) + Sambar with soya (30g) + Okra fry + Curd", "100g + 150g + 100g + 100g", 450, 18, 6, 8],
+                    ["Evening Snack", "Green tea + Sunflower seeds (20g)", "200ml + 20g", 100, 4, 5, 3],
+                    ["Dinner", "Chapati (2) + Lauki curry + Steamed carrots (100g)", "60g + 150g + 100g", 350, 12, 6, 7]
+                ],
+                "Saturday": [
+                    ["Breakfast", "Ragi dosa (2) with mint chutney + 1 boiled egg", "150g + 50g", 350, 15, 7, 6],
+                    ["Mid-Morning", "1 orange (100g) + 10 almonds (10g)", "100g + 10g", 138, 3, 8, 5],
+                    ["Lunch", "Millet rice (100g) + Sambar with soya (30g) + Beetroot poriyal + Curd", "100g + 150g + 100g + 100g", 450, 18, 6, 8],
+                    ["Evening Snack", "Buttermilk (200ml) + Peanuts (20g)", "200ml + 20g", 150, 6, 8, 3],
+                    ["Dinner", "Quinoa upma (200g) + Curd", "200g + 100g", 350, 12, 6, 6]
+                ],
+                "Sunday": [
+                    ["Breakfast", "Idli (4) with tomato chutney + 1 boiled egg", "150g + 50g", 300, 15, 5, 4],
+                    ["Mid-Morning", "1 guava (100g) + 1 tsp chia seeds (5g)", "100g + 5g", 120, 2, 3, 5],
+                    ["Lunch", "Brown rice (100g) + Fish curry (100g) + Cabbage thoran + Curd", "100g + 100g + 100g + 100g", 500, 25, 10, 6], // Fish retained
+                    ["Evening Snack", "Green tea + Roasted chana (30g)", "200ml + 30g", 100, 5, 2, 3],
+                    ["Dinner", "Chapati (2) + Spinach dal (150g) + Steamed broccoli (100g)", "60g + 150g + 100g", 350, 15, 6, 7]
+                ]
+            },
+            "Veg Palate": {
+                "Monday": [
+                    ["Breakfast", "Ragi dosa with peanut chutney & soya chunks", "2 dosa (150 g) + 20 g chutney + 20 g soya", 320, 20, 8, 5],
+                    ["Mid-Morning", "Guava", "100 g", 68, 1, 0.5, 5.5],
+                    ["Lunch", "Brown rice, dal, spinach stir-fry with soya", "150 g rice + 100 g dal + 15 g soya + 100 g spinach", 430, 25, 7, 8],
+                    ["Evening Snack", "Masala buttermilk & roasted chana", "200 ml + 30 g", 150, 8, 4, 4],
+                    ["Dinner", "Millet khichdi with vegetable curry", "200 g khichdi + 100 g curry", 350, 18, 6, 7]
+                ],
+                "Tuesday": [
+                    ["Breakfast", "Vegetable upma with flax seeds & soya", "200 g + 10 g flax + 20 g soya", 320, 18, 9, 5],
+                    ["Mid-Morning", "Papaya", "100 g", 43, 0.5, 0, 2.5],
+                    ["Lunch", "Quinoa, rajma curry, mixed vegetables", "150 g quinoa + 100 g rajma + 100 g vegetables", 450, 27, 7, 9],
+                    ["Evening Snack", "Coconut water & walnuts", "200 ml + 10 g", 130, 5, 9, 2],
+                    ["Dinner", "Paneer bhurji with chapati", "100 g paneer + 2 chapati (100 g)", 400, 28, 12, 6]
+                ],
+                "Wednesday": [
+                    ["Breakfast", "Moong dal dosa with tomato chutney", "2 dosa (150 g) + 20 g chutney", 320, 20, 7, 5],
+                    ["Mid-Morning", "Apple", "100 g", 52, 0.3, 0, 2.5],
+                    ["Lunch", "Red rice, dal, sautéed okra with soya", "150 g rice + 100 g dal + 10 g soya + 100 g okra", 420, 24, 7, 8],
+                    ["Evening Snack", "Sprouts & roasted peanuts", "50 g", 150, 12, 5, 4],
+                    ["Dinner", "Stuffed multigrain paratha with curd", "2 paratha (120 g) + 100 g curd", 350, 20, 6, 6]
+                ],
+                "Thursday": [
+                    ["Breakfast", "Besan chilla with mint chutney & soya", "2 chilla (150 g) + 20 g chutney + 20 g soya", 320, 22, 7, 5],
+                    ["Mid-Morning", "Orange", "100 g", 47, 1, 0.1, 2.5],
+                    ["Lunch", "Brown rice, chana masala, sautéed cabbage", "150 g rice + 100 g chana + 100 g cabbage", 440, 28, 6, 9],
+                    ["Evening Snack", "Almonds & buttermilk", "10 almonds + 200 ml", 120, 7, 5, 2],
+                    ["Dinner", "Vegetable sambar with idli", "2 idli (100 g) + 200 ml sambar", 350, 18, 7, 6]
+                ],
+                "Friday": [
+                    ["Breakfast", "Poha with groundnuts & flax seeds", "200 g + 10 g flax", 320, 18, 8, 5],
+                    ["Mid-Morning", "Pomegranate", "100 g", 83, 1.5, 0.5, 3],
+                    ["Lunch", "Millet rice, rajma, stir-fried vegetables with soya", "150 g rice + 100 g rajma + 10 g soya + 100 g veg", 450, 27, 7, 9],
+                    ["Evening Snack", "Tender coconut & roasted nuts", "200 ml + 10 g", 120, 5, 3.5, 2],
+                    ["Dinner", "Methi thepla with curd", "2 thepla (120 g) + 100 g curd", 350, 20, 6, 6]
+                ],
+                "Saturday": [
+                    ["Breakfast", "Pesarattu (green gram dosa) with peanut chutney", "2 dosa (150 g) + 20 g chutney", 310, 20, 7, 4],
+                    ["Mid-Morning", "Banana", "100 g", 90, 1, 0.3, 2.6],
+                    ["Lunch", "Quinoa, moong dal, sautéed broccoli with soya", "150 g quinoa + 100 g dal + 10 g soya + 100 g broccoli", 450, 28, 7, 9],
+                    ["Evening Snack", "Sprouted moong & roasted chana", "50 g", 150, 12, 5, 4],
+                    ["Dinner", "Vegetable idiyappam", "150 g + 100 g kurma", 350, 20, 6, 6]
+                ],
+                "Sunday": [
+                    ["Breakfast", "Millet dosa with coconut chutney", "2 dosa (150 g) + 20 g chutney", 320, 18, 8, 5],
+                    ["Mid-Morning", "Watermelon", "150 g", 45, 0.5, 0, 0.8],
+                    ["Lunch", "Red rice, dal, palak sabzi with soya", "150 g rice + 100 g dal + 10 g soya + 100 g spinach", 420, 24, 7, 8],
+                    ["Evening Snack", "Tender coconut water & walnuts", "200 ml + 10 g", 130, 5, 9, 2],
+                    ["Dinner", "Vegetable khichdi with curd", "200 g khichdi + 100 g curd", 350, 20, 6, 7]
+                ]
+            }
+        };
+
+        const recipes = {
+            "Coconut Chutney": {
+                "serves": "3",
+                "prepTime": "5 minutes",
+                "cookTime": "5 minutes",
+                "ingredients": [
+                    "½ cup grated coconut",
+                    "2 tbsp roasted chana dal",
+                    "1 small green chili",
+                    "½ inch ginger",
+                    "2 tbsp curd (optional, for slight tanginess)",
+                    "Salt to taste",
+                    "Water as required",
+                    "For tempering:",
+                    "1 tsp coconut oil",
+                    "½ tsp mustard seeds",
+                    "½ tsp urad dal",
+                    "1 dry red chili",
+                    "A few curry leaves"
+                ],
+                "instructions": [
+                    "Blend coconut, roasted chana dal, green chili, ginger, curd (if using), and salt with water to make a smooth chutney.",
+                    "Heat oil in a small pan, add mustard seeds, urad dal, red chili, and curry leaves. Let it splutter.",
+                    "Pour the tempering over the chutney and mix well.",
+                    "Serve with dosa, idli, or upma."
+                ]
+            },
+            "Soya Fry": {
+                "serves": "3",
+                "prepTime": "15 minutes",
+                "cookTime": "15 minutes",
+                "ingredients": [
+                    "1 cup soya chunks",
+                    "1 medium onion, finely chopped",
+                    "1 small tomato, finely chopped",
+                    "1 tsp ginger-garlic paste",
+                    "½ tsp mustard seeds",
+                    "½ tsp cumin seeds",
+                    "1 sprig curry leaves",
+                    "½ tsp turmeric powder",
+                    "1 tsp chili powder",
+                    "½ tsp garam masala",
+                    "Salt to taste",
+                    "1 tsp lemon juice",
+                    "1 tsp coconut oil"
+                ],
+                "instructions": [
+                    "Boil soya chunks in water for 5 minutes, then squeeze out excess water.",
+                    "Heat oil in a pan, add mustard seeds, cumin, and curry leaves.",
+                    "Add onions and sauté until golden brown, then add ginger-garlic paste and cook for a minute.",
+                    "Add tomatoes, turmeric, chili powder, garam masala, and salt. Cook until tomatoes turn mushy.",
+                    "Add the squeezed soya chunks and mix well. Cook for 5-7 minutes.",
+                    "Finish with lemon juice and serve hot."
+                ]
+            },
+            "Mixed Vegetable Curry": {
+                "serves": "3",
+                "prepTime": "10 minutes",
+                "cookTime": "20 minutes",
+                "ingredients": [
+                    "1 cup mixed vegetables (carrot, beans, peas, cauliflower, etc.)",
+                    "1 medium onion, chopped",
+                    "1 small tomato, chopped",
+                    "1 tsp ginger-garlic paste",
+                    "½ tsp mustard seeds",
+                    "½ tsp cumin seeds",
+                    "½ tsp turmeric powder",
+                    "1 tsp chili powder",
+                    "½ tsp garam masala",
+                    "½ cup thin coconut milk",
+                    "Salt to taste",
+                    "1 tsp coconut oil"
+                ],
+                "instructions": [
+                    "Heat oil in a pan, add mustard seeds and cumin seeds.",
+                    "Add onions and sauté until golden. Add ginger-garlic paste and cook for a minute.",
+                    "Add tomatoes and cook until soft.",
+                    "Add turmeric, chili powder, and garam masala. Mix well.",
+                    "Add vegetables and stir-fry for 2 minutes.",
+                    "Pour coconut milk and simmer until vegetables are cooked.",
+                    "Serve with rice or chapati."
+                ]
+            },
+            "Vegetable Sambar": {
+                "serves": "3",
+                "prepTime": "15 minutes",
+                "cookTime": "20 minutes",
+                "ingredients": [
+                    "½ cup toor dal",
+                    "1½ cups mixed vegetables (carrot, beans, drumstick, etc.)",
+                    "1 small tomato, chopped",
+                    "1 small onion, chopped",
+                    "½ tsp turmeric powder",
+                    "1 tbsp sambar powder",
+                    "Small lemon-sized tamarind, soaked in water",
+                    "Salt to taste",
+                    "For tempering:",
+                    "1 tsp coconut oil",
+                    "½ tsp mustard seeds",
+                    "½ tsp cumin seeds",
+                    "1 dry red chili",
+                    "A few curry leaves"
+                ],
+                "instructions": [
+                    "Pressure cook toor dal with turmeric and water until soft.",
+                    "Boil vegetables with some water until tender.",
+                    "Add chopped tomato, onions, sambar powder, salt, and tamarind extract.",
+                    "Mash cooked dal and add to the vegetables. Let it simmer for 5 minutes.",
+                    "Heat oil, add mustard seeds, cumin, red chili, and curry leaves. Pour over the sambar.",
+                    "Serve hot with rice or idli."
+                ]
+            },
+            "Roasted Chana & Groundnuts": {
+                "serves": "3",
+                "prepTime": "5 minutes",
+                "cookTime": "10 minutes",
+                "ingredients": [
+                    "½ cup roasted chana (pottukadalai)",
+                    "½ cup roasted groundnuts (peanuts)",
+                    "1 tsp coconut oil",
+                    "½ tsp chili powder",
+                    "¼ tsp salt"
+                ],
+                "instructions": [
+                    "Heat oil in a pan, add roasted chana and peanuts.",
+                    "Sprinkle chili powder and salt.",
+                    "Toss well and serve as a healthy snack."
+                ]
+            },
+            "Vegetable Upma": {
+                "serves": "3",
+                "prepTime": "10 minutes",
+                "cookTime": "15 minutes",
+                "ingredients": [
+                    "1 cup rava (semolina)",
+                    "1½ cups water",
+                    "½ cup mixed vegetables (carrot, beans, peas)",
+                    "1 small onion, chopped",
+                    "1 green chili, chopped",
+                    "½ tsp mustard seeds",
+                    "½ tsp urad dal",
+                    "A few curry leaves",
+                    "1 tsp coconut oil",
+                    "Salt to taste"
+                ],
+                "instructions": [
+                    "Dry roast rava in a pan until aromatic. Set aside.",
+                    "Heat oil, add mustard seeds, urad dal, curry leaves, and green chili.",
+                    "Add onions and sauté until translucent.",
+                    "Add vegetables and cook for a few minutes.",
+                    "Boil water and add salt.",
+                    "Slowly add roasted rava while stirring continuously.",
+                    "Cover and cook for 2 minutes. Serve hot."
+                ]
+            },
+            "Tomato Chutney": {
+                "serves": "3",
+                "prepTime": "5 minutes",
+                "cookTime": "10 minutes",
+                "ingredients": [
+                    "2 medium tomatoes, chopped",
+                    "1 small onion, chopped",
+                    "1 green chili",
+                    "1 garlic clove",
+                    "½ tsp mustard seeds",
+                    "½ tsp urad dal",
+                    "1 dry red chili",
+                    "A few curry leaves",
+                    "1 tsp coconut oil",
+                    "Salt to taste"
+                ],
+                "instructions": [
+                    "Heat oil, add mustard seeds, urad dal, red chili, and curry leaves.",
+                    "Add onions, green chili, and garlic. Sauté until soft.",
+                    "Add tomatoes and cook until mushy.",
+                    "Cool and blend into a smooth paste.",
+                    "Serve with upma or dosa."
+                ]
+            },
+            "Soya Chunks Stir-Fry": {
+                "serves": "3",
+                "prepTime": "10 minutes",
+                "cookTime": "10 minutes",
+                "ingredients": [
+                    "1 cup soya chunks",
+                    "1 small onion, chopped",
+                    "1 small tomato, chopped",
+                    "½ tsp mustard seeds",
+                    "½ tsp cumin seeds",
+                    "½ tsp turmeric powder",
+                    "½ tsp chili powder",
+                    "1 sprig curry leaves",
+                    "Salt to taste",
+                    "1 tsp coconut oil"
+                ],
+                "instructions": [
+                    "Boil soya chunks for 5 minutes, squeeze out excess water.",
+                    "Heat oil, add mustard seeds, cumin, and curry leaves.",
+                    "Add onions and sauté until golden.",
+                    "Add tomatoes and spices. Cook until soft.",
+                    "Add soya chunks and mix well. Stir-fry for 5 minutes.",
+                    "Serve hot."
+                ]
+            },
+            "Ragi Dosa": {
+                "serves": "3",
+                "prepTime": "10 minutes (excluding fermentation time)",
+                "cookTime": "15 minutes",
+                "ingredients": [
+                    "1 cup ragi flour",
+                    "¼ cup rice flour",
+                    "¼ cup curd (optional, for slight tanginess)",
+                    "½ cup water (adjust as needed)",
+                    "1 small onion, finely chopped",
+                    "1 green chili, finely chopped",
+                    "A few curry leaves, chopped",
+                    "Salt to taste",
+                    "1 tsp coconut oil (for cooking)"
+                ],
+                "instructions": [
+                    "Mix ragi flour, rice flour, curd, salt, and water into a smooth batter.",
+                    "Let it rest for 30 minutes or ferment overnight for better taste.",
+                    "Add chopped onion, green chili, and curry leaves.",
+                    "Heat a tawa, pour a ladle of batter, and spread it like a dosa.",
+                    "Drizzle oil and cook until crispy.",
+                    "Serve with coconut chutney or sambar."
+                ]
+            },
+            "South Indian Fish Curry": {
+                "serves": "3",
+                "prepTime": "15 minutes",
+                "cookTime": "20 minutes",
+                "ingredients": [
+                    "250g fish (any firm fish like kingfish or mackerel)",
+                    "1 small onion, finely chopped",
+                    "1 tomato, finely chopped",
+                    "1 tsp ginger-garlic paste",
+                    "½ tsp turmeric powder",
+                    "1 tsp chili powder",
+                    "1 tbsp coriander powder",
+                    "½ cup tamarind water",
+                    "½ tsp mustard seeds",
+                    "1 sprig curry leaves",
+                    "1 tsp coconut oil",
+                    "Salt to taste"
+                ],
+                "instructions": [
+                    "Heat oil, add mustard seeds and curry leaves.",
+                    "Add onions, sauté until golden. Add ginger-garlic paste and cook for a minute.",
+                    "Add tomatoes, turmeric, chili powder, and coriander powder. Cook until tomatoes are soft.",
+                    "Add tamarind water and salt. Simmer for 5 minutes.",
+                    "Add fish pieces and cook for 7-10 minutes until done.",
+                    "Serve with rice or dosa."
+                ]
+            },
+            "Vegetable Stir-Fry with Soya": {
+                "serves": "3",
+                "prepTime": "10 minutes",
+                "cookTime": "15 minutes",
+                "ingredients": [
+                    "1 cup soya chunks",
+                    "1 cup mixed vegetables (carrot, beans, capsicum, etc.)",
+                    "1 small onion, chopped",
+                    "½ tsp mustard seeds",
+                    "½ tsp cumin seeds",
+                    "½ tsp turmeric powder",
+                    "1 tsp chili powder",
+                    "Salt to taste",
+                    "1 tsp coconut oil"
+                ],
+                "instructions": [
+                    "Boil soya chunks in water for 5 minutes and squeeze out excess water.",
+                    "Heat oil, add mustard seeds, cumin, and chopped onions.",
+                    "Add turmeric, chili powder, and salt. Mix well.",
+                    "Add vegetables and stir-fry for 5 minutes.",
+                    "Add soya chunks and cook for another 5 minutes.",
+                    "Serve as a side dish with rice or chapati."
+                ]
+            },
+            "Pongal (Rice & Moong Dal)": {
+                "serves": "3",
+                "prepTime": "10 minutes",
+                "cookTime": "20 minutes",
+                "ingredients": [
+                    "½ cup raw rice",
+                    "¼ cup moong dal",
+                    "½ tsp turmeric powder",
+                    "½ tsp black pepper",
+                    "1 tsp cumin seeds",
+                    "A few curry leaves",
+                    "1 tsp ghee or coconut oil",
+                    "Salt to taste"
+                ],
+                "instructions": [
+                    "Dry roast moong dal for a few minutes until aromatic.",
+                    "Wash rice and cook with moong dal, turmeric, and 2 cups water until soft.",
+                    "Heat oil/ghee, add cumin, pepper, and curry leaves. Pour over cooked pongal.",
+                    "Mix well and serve hot."
+                ]
+            },
+            "Rasam": {
+                "serves": "3",
+                "prepTime": "10 minutes",
+                "cookTime": "15 minutes",
+                "ingredients": [
+                    "1 small tomato, mashed",
+                    "½ tsp tamarind paste",
+                    "½ tsp turmeric powder",
+                    "½ tsp black pepper powder",
+                    "1 tsp rasam powder",
+                    "½ cup cooked toor dal",
+                    "1 tsp mustard seeds",
+                    "A few curry leaves",
+                    "1 tsp coconut oil"
+                ],
+                "instructions": [
+                    "Boil tamarind water, mashed tomato, turmeric, and rasam powder for 5 minutes.",
+                    "Add cooked dal and simmer for 5 more minutes.",
+                    "Heat oil, add mustard seeds and curry leaves. Pour over rasam.",
+                    "Serve hot with rice."
+                ]
+            },
+            "Mixed Vegetable Curry with Soya": {
+                "serves": "3",
+                "prepTime": "10 minutes",
+                "cookTime": "20 minutes",
+                "ingredients": [
+                    "1 cup mixed vegetables (carrot, beans, peas, cauliflower, etc.)",
+                    "½ cup soya chunks",
+                    "1 small onion, chopped",
+                    "1 small tomato, chopped",
+                    "½ tsp mustard seeds",
+                    "½ tsp turmeric powder",
+                    "1 tsp coriander powder",
+                    "Salt to taste",
+                    "1 tsp coconut oil"
+                ],
+                "instructions": [
+                    "Boil soya chunks, squeeze excess water.",
+                    "Heat oil, add mustard seeds, onions, and sauté.",
+                    "Add turmeric, coriander powder, and tomatoes. Cook until soft.",
+                    "Add vegetables, salt, and little water. Cook until done.",
+                    "Add soya chunks, mix well and serve hot."
+                ]
+            },
+            "Chicken Curry": {
+                "serves": "3",
+                "prepTime": "15 minutes",
+                "cookTime": "25 minutes",
+                "ingredients": [
+                    "250g chicken",
+                    "1 small onion, chopped",
+                    "1 small tomato, chopped",
+                    "1 tsp ginger-garlic paste",
+                    "½ tsp turmeric powder",
+                    "1 tsp chili powder",
+                    "1 tsp coriander powder",
+                    "½ tsp garam masala",
+                    "½ cup coconut milk",
+                    "Salt to taste",
+                    "1 tsp coconut oil"
+                ],
+                "instructions": [
+                    "Heat oil, add onions and sauté until golden.",
+                    "Add ginger-garlic paste, sauté for a minute.",
+                    "Add tomatoes, turmeric, chili, coriander powder, and salt. Cook until soft.",
+                    "Add chicken pieces and cook for 10 minutes.",
+                    "Add coconut milk and simmer for 10 more minutes.",
+                    "Sprinkle garam masala and serve hot."
+                ]
+            },
+            "Beans & Soya": {
+                "serves": "3",
+                "prepTime": "10 minutes",
+                "cookTime": "15 minutes",
+                "ingredients": [
+                    "1 cup chopped beans",
+                    "½ cup soya chunks",
+                    "½ tsp mustard seeds",
+                    "1 small onion, chopped",
+                    "½ tsp turmeric powder",
+                    "½ tsp chili powder",
+                    "Salt to taste",
+                    "1 tsp coconut oil"
+                ],
+                "instructions": [
+                    "Boil soya chunks and squeeze out excess water.",
+                    "Heat oil, add mustard seeds, onions, and sauté.",
+                    "Add turmeric, chili powder, and salt.",
+                    "Add beans and cook until soft.",
+                    "Add soya chunks and stir well.",
+                    "Serve as a side dish with rice or chapati."
+                ]
+            },
+            "Vegetable Pulao": {
+                "serves": "3",
+                "prepTime": "10 minutes",
+                "cookTime": "20 minutes",
+                "ingredients": [
+                    "1 cup basmati rice",
+                    "1½ cups mixed vegetables (carrot, beans, peas)",
+                    "1 small onion, sliced",
+                    "1 bay leaf",
+                    "½ tsp cumin seeds",
+                    "½ tsp garam masala",
+                    "1 tsp coconut oil",
+                    "Salt to taste"
+                ],
+                "instructions": [
+                    "Heat oil, add bay leaf, cumin seeds, and onions.",
+                    "Add vegetables, garam masala, and sauté for 2 minutes.",
+                    "Add washed rice, salt, and 2 cups water.",
+                    "Cook covered until rice is fluffy.",
+                    "Serve hot with raita."
+                ]
+            },
+            "Cucumber Raita": {
+                "serves": "3",
+                "prepTime": "5 minutes",
+                "cookTime": "0 minutes",
+                "ingredients": [
+                    "1 cup curd",
+                    "½ cup grated cucumber",
+                    "½ tsp roasted cumin powder",
+                    "Salt to taste"
+                ],
+                "instructions": [
+                    "Mix all ingredients in a bowl.",
+                    "Chill and serve with pulao or pongal."
+                ]
+            },
+            "Greens Curry (Palak Curry)": {
+                serves: "2-3",
+                prepTime: "10 minutes",
+                cookTime: "15 minutes",
+                ingredients: [
+                    "2 cups chopped spinach (palak) (or any greens of your choice)",
+                    "½ cup moong dal (optional, for protein)",
+                    "1 small onion, finely chopped",
+                    "2 green chilies, slit",
+                    "2 garlic cloves, chopped",
+                    "½ tsp mustard seeds",
+                    "½ tsp cumin seeds",
+                    "1 dry red chili (optional)",
+                    "¼ tsp turmeric powder",
+                    "½ tsp salt (adjust to taste)",
+                    "1 tbsp grated coconut (optional, for authentic flavor)",
+                    "1 tsp oil (coconut or gingelly oil preferred)"
+                ],
+                instructions: [
+                    "Prepare the greens: Wash the greens thoroughly in water, chop them finely, and set aside.",
+                    "Cook dal (if using): If adding moong dal, cook it separately in 1 cup water until soft but not mushy.",
+                    "Tempering (Tadka): Heat oil in a pan, add mustard seeds, cumin seeds, and dry red chili. Once they splutter, add chopped garlic, green chilies, and onions. Sauté until onions turn golden.",
+                    "Add greens: Now add chopped greens, turmeric, and salt. Mix well and cook for 5-7 minutes until soft.",
+                    "Add dal & coconut (optional): If using moong dal, mix it in and simmer for 2 minutes. Sprinkle fresh grated coconut for extra flavor.",
+                    "Serve hot with steamed rice, roti, or millets."
+                ]
+            },
+            "Vegetable Upma": {
+                "serves": "3",
+                "prepTime": "10 minutes",
+                "cookTime": "15 minutes",
+                "ingredients": [
+                    "1 cup rava (semolina)",
+                    "1 small onion, chopped",
+                    "½ cup mixed vegetables (carrot, beans, peas)",
+                    "1 green chili, chopped",
+                    "1 tsp mustard seeds",
+                    "1 tsp urad dal",
+                    "A few curry leaves",
+                    "2 cups water",
+                    "½ tsp salt",
+                    "1 tsp coconut oil"
+                ],
+                "instructions": [
+                    "Dry roast rava until aromatic and set aside.",
+                    "Heat oil, add mustard seeds, urad dal, curry leaves, and green chili.",
+                    "Add onions, sauté until translucent. Add vegetables and cook for 2-3 minutes.",
+                    "Add water and salt. Bring to a boil.",
+                    "Slowly add rava while stirring to avoid lumps.",
+                    "Cover and cook for 5 minutes. Serve hot."
+                ]
+            },
+            "Vegetable Chutney": {
+                "serves": "3",
+                "prepTime": "10 minutes",
+                "cookTime": "5 minutes",
+                "ingredients": [
+                    "1 small carrot, chopped",
+                    "½ tomato, chopped",
+                    "½ capsicum, chopped",
+                    "1 green chili",
+                    "1 tsp urad dal",
+                    "½ tsp mustard seeds",
+                    "A few curry leaves",
+                    "1 tsp coconut oil",
+                    "Salt to taste"
+                ],
+                "instructions": [
+                    "Heat oil, sauté urad dal, mustard seeds, and curry leaves.",
+                    "Add chopped vegetables and cook for 5 minutes.",
+                    "Cool and blend into a chutney with salt.",
+                    "Serve with dosa, idli, or upma."
+                ]
+            },
+            "Okra Fry with Soya": {
+                "serves": "3",
+                "prepTime": "10 minutes",
+                "cookTime": "15 minutes",
+                "ingredients": [
+                    "1 cup okra, chopped",
+                    "½ cup soya chunks",
+                    "1 small onion, sliced",
+                    "½ tsp turmeric powder",
+                    "½ tsp chili powder",
+                    "Salt to taste",
+                    "1 tsp coconut oil"
+                ],
+                "instructions": [
+                    "Boil soya chunks, squeeze excess water.",
+                    "Heat oil, sauté onions until golden.",
+                    "Add okra, turmeric, and chili powder. Cook until non-sticky.",
+                    "Add soya chunks, mix well, and cook for 5 minutes.",
+                    "Serve hot with rice or chapati."
+                ]
+            },
+            "Mint Chutney": {
+                "serves": "3",
+                "prepTime": "5 minutes",
+                "cookTime": "5 minutes",
+                "ingredients": [
+                    "1 cup mint leaves",
+                    "½ cup coriander leaves",
+                    "1 green chili",
+                    "½ tsp tamarind paste",
+                    "½ tsp salt"
+                ],
+                "instructions": [
+                    "Blend all ingredients into a smooth chutney.",
+                    "Serve with dosa, idli, or upma."
+                ]
+            },
+            "Pesarattu (Green Gram Dosa)": {
+                "serves": "3",
+                "prepTime": "4 hours (soaking time)",
+                "cookTime": "15 minutes",
+                "ingredients": [
+                    "1 cup whole green gram (moong dal)",
+                    "1 small onion, finely chopped",
+                    "1 green chili, chopped",
+                    "1 tsp cumin seeds",
+                    "Salt to taste",
+                    "1 tsp coconut oil"
+                ],
+                "instructions": [
+                    "Soak green gram for 4 hours and blend into a batter with green chili and salt.",
+                    "Heat a tawa, pour batter, and spread like a dosa.",
+                    "Top with chopped onions and cumin seeds.",
+                    "Drizzle oil and cook until crispy. Serve with chutney."
+                ]
+            },
+            "Stir-Fried Cabbage with Soya": {
+                "serves": "3",
+                "prepTime": "10 minutes",
+                "cookTime": "15 minutes",
+                "ingredients": [
+                    "1 cup shredded cabbage",
+                    "½ cup soya chunks",
+                    "½ tsp mustard seeds",
+                    "1 small onion, chopped",
+                    "½ tsp turmeric powder",
+                    "½ tsp chili powder",
+                    "Salt to taste",
+                    "1 tsp coconut oil"
+                ],
+                "instructions": [
+                    "Boil soya chunks, squeeze excess water.",
+                    "Heat oil, add mustard seeds and onions, sauté until soft.",
+                    "Add turmeric, chili powder, and cabbage. Stir-fry until cooked.",
+                    "Add soya chunks, mix well, and serve."
+                ]
+            },
+            "Simple Dal": {
+                "serves": "3",
+                "prepTime": "10 minutes",
+                "cookTime": "20 minutes",
+                "ingredients": [
+                    "½ cup toor dal (pigeon pea)",
+                    "1 small tomato, chopped",
+                    "½ tsp turmeric powder",
+                    "½ tsp mustard seeds",
+                    "A few curry leaves",
+                    "1 green chili",
+                    "1 tsp coconut oil",
+                    "Salt to taste"
+                ],
+                "instructions": [
+                    "Pressure cook toor dal with tomato and turmeric for 3 whistles.",
+                    "Heat oil, add mustard seeds, curry leaves, and green chili.",
+                    "Pour over dal, mix well, and serve with rice."
+                ]
+            },
+            "Vegetable Idiyappam": {
+                "serves": "3",
+                "prepTime": "15 minutes",
+                "cookTime": "10 minutes",
+                "ingredients": [
+                    "2 cups rice flour",
+                    "1 cup warm water",
+                    "½ tsp salt",
+                    "½ cup mixed vegetables (carrot, beans, capsicum)",
+                    "1 tsp mustard seeds",
+                    "A few curry leaves",
+                    "1 tsp coconut oil"
+                ],
+                "instructions": [
+                    "Mix rice flour, warm water, and salt into a dough.",
+                    "Press into idiyappam plates and steam for 5 minutes.",
+                    "Heat oil, add mustard seeds, curry leaves, and vegetables.",
+                    "Mix with idiyappam and serve."
+                ]
+            },
+            "Onion Chutney": {
+                "serves": "3",
+                "prepTime": "5 minutes",
+                "cookTime": "5 minutes",
+                "ingredients": [
+                    "1 small onion, chopped",
+                    "1 dry red chili",
+                    "1 small tamarind piece",
+                    "1 tsp urad dal",
+                    "½ tsp mustard seeds",
+                    "1 tsp coconut oil",
+                    "Salt to taste"
+                ],
+                "instructions": [
+                    "Heat oil, sauté onions, red chili, urad dal, and tamarind.",
+                    "Cool and blend into chutney.",
+                    "Serve with dosa, idli, or upma."
+                ]
+            },
+            "Simple Spinach Curry": {
+                "serves": "3",
+                "prepTime": "10 minutes",
+                "cookTime": "15 minutes",
+                "ingredients": [
+                    "2 cups chopped spinach",
+                    "½ tsp mustard seeds",
+                    "1 small onion, chopped",
+                    "1 green chili, chopped",
+                    "½ tsp turmeric powder",
+                    "½ tsp salt",
+                    "1 tsp coconut oil"
+                ],
+                "instructions": [
+                    "Heat oil, add mustard seeds, onions, and green chili.",
+                    "Add turmeric and chopped spinach. Cook until soft.",
+                    "Serve with rice or chapati."
+                ]
+            },
+            "Pongal": {
+                "serves": "3",
+                "prepTime": "10 minutes",
+                "cookTime": "20 minutes",
+                "ingredients": [
+                    "½ cup rice",
+                    "¼ cup moong dal",
+                    "½ tsp black pepper",
+                    "½ tsp cumin seeds",
+                    "1 tsp ginger, grated",
+                    "A few curry leaves",
+                    "1 tsp coconut oil",
+                    "2½ cups water",
+                    "Salt to taste"
+                ],
+                "instructions": [
+                    "Dry roast moong dal for 2 minutes and set aside.",
+                    "Wash rice and dal together. Pressure cook with water and salt for 3 whistles.",
+                    "Heat oil, add cumin, black pepper, ginger, and curry leaves.",
+                    "Mix with cooked rice-dal mixture. Serve hot."
+                ]
+            },
+            "Beetroot Poriyal": {
+                "serves": "3",
+                "prepTime": "10 minutes",
+                "cookTime": "15 minutes",
+                "ingredients": [
+                    "1 cup beetroot, grated",
+                    "1 small onion, chopped",
+                    "1 green chili, chopped",
+                    "½ tsp mustard seeds",
+                    "½ tsp urad dal",
+                    "1 tbsp grated coconut",
+                    "1 tsp coconut oil",
+                    "Salt to taste"
+                ],
+                "instructions": [
+                    "Heat oil, add mustard seeds, urad dal, green chili, and onions.",
+                    "Add grated beetroot and salt. Cook for 7-10 minutes.",
+                    "Sprinkle grated coconut, mix well, and serve."
+                ]
+            },
+            "Lauki Curry": {
+                "serves": "3",
+                "prepTime": "10 minutes",
+                "cookTime": "15 minutes",
+                "ingredients": [
+                    "1 cup bottle gourd (lauki), chopped",
+                    "½ cup cooked moong dal",
+                    "½ tsp turmeric powder",
+                    "½ tsp mustard seeds",
+                    "1 tsp ginger, chopped",
+                    "A few curry leaves",
+                    "1 tsp coconut oil",
+                    "Salt to taste"
+                ],
+                "instructions": [
+                    "Heat oil, add mustard seeds, ginger, and curry leaves.",
+                    "Add chopped lauki, turmeric, and salt. Cook for 10 minutes.",
+                    "Add cooked moong dal, mix well, and serve."
+                ]
+            },
+            "Cabbage Thoran": {
+                "serves": "3",
+                "prepTime": "10 minutes",
+                "cookTime": "10 minutes",
+                "ingredients": [
+                    "1 cup cabbage, finely shredded",
+                    "1 green chili, chopped",
+                    "1 tsp mustard seeds",
+                    "1 tbsp grated coconut",
+                    "A few curry leaves",
+                    "1 tsp coconut oil",
+                    "Salt to taste"
+                ],
+                "instructions": [
+                    "Heat oil, add mustard seeds, curry leaves, and green chili.",
+                    "Add shredded cabbage and salt. Stir-fry for 5-7 minutes.",
+                    "Sprinkle grated coconut, mix well, and serve."
+                ]
+            },
+            "Quinoa Upma": {
+                "serves": "3",
+                "prepTime": "10 minutes",
+                "cookTime": "15 minutes",
+                "ingredients": [
+                    "1 cup quinoa",
+                    "½ cup mixed vegetables",
+                    "1 small onion, chopped",
+                    "1 green chili, chopped",
+                    "1 tsp mustard seeds",
+                    "A few curry leaves",
+                    "2 cups water",
+                    "1 tsp coconut oil",
+                    "Salt to taste"
+                ],
+                "instructions": [
+                    "Rinse quinoa well. Heat oil, add mustard seeds, green chili, and onions.",
+                    "Add vegetables and cook for 2 minutes.",
+                    "Add quinoa, water, and salt. Cook for 10 minutes until water is absorbed.",
+                    "Serve hot."
+                ]
+            },
+            "Avial": {
+                "serves": "3",
+                "prepTime": "15 minutes",
+                "cookTime": "15 minutes",
+                "ingredients": [
+                    "1 cup mixed vegetables (carrot, beans, drumstick, pumpkin, etc.)",
+                    "½ cup coconut, grated",
+                    "1 green chili",
+                    "½ cup curd",
+                    "1 tsp coconut oil",
+                    "Salt to taste"
+                ],
+                "instructions": [
+                    "Boil mixed vegetables with little water and salt.",
+                    "Grind coconut and green chili into a paste and add to cooked vegetables.",
+                    "Mix in curd and drizzle coconut oil. Serve hot."
+                ]
+            },
+            "Spinach Dal": {
+                "serves": "3",
+                "prepTime": "10 minutes",
+                "cookTime": "20 minutes",
+                "ingredients": [
+                    "½ cup toor dal",
+                    "1 cup spinach, chopped",
+                    "1 small tomato, chopped",
+                    "½ tsp turmeric powder",
+                    "1 tsp mustard seeds",
+                    "1 tsp coconut oil",
+                    "Salt to taste"
+                ],
+                "instructions": [
+                    "Pressure cook dal with tomatoes and turmeric.",
+                    "Heat oil, add mustard seeds, then add spinach and cook for 5 minutes.",
+                    "Mix with dal, add salt, and serve."
+                ]
+            },
+            "Steamed Broccoli": {
+                "serves": "3",
+                "prepTime": "5 minutes",
+                "cookTime": "5 minutes",
+                "ingredients": [
+                    "1 cup broccoli florets",
+                    "Salt to taste",
+                    "½ tsp black pepper",
+                    "1 tsp lemon juice"
+                ],
+                "instructions": [
+                    "Steam broccoli for 5 minutes.",
+                    "Season with salt, black pepper, and lemon juice.",
+                    "Serve as a healthy side dish."
+                ]
+            },
+            "Oats Upma": {
+                "serves": "3",
+                "prepTime": "10 minutes",
+                "cookTime": "10 minutes",
+                "ingredients": [
+                    "1 cup rolled oats",
+                    "½ cup mixed vegetables",
+                    "1 small onion, chopped",
+                    "1 green chili, chopped",
+                    "1 tsp mustard seeds",
+                    "A few curry leaves",
+                    "1 tsp coconut oil",
+                    "Salt to taste"
+                ],
+                "instructions": [
+                    "Dry roast oats and set aside.",
+                    "Heat oil, add mustard seeds, onions, and green chili.",
+                    "Add vegetables, sauté for 2 minutes.",
+                    "Add 1 cup water, bring to boil, and mix in oats.",
+                    "Cover and cook for 5 minutes. Serve hot."
+                ]
+            },
+            "Carrot Beans Poriyal": {
+                "serves": "3",
+                "prepTime": "10 minutes",
+                "cookTime": "15 minutes",
+                "ingredients": [
+                    "½ cup carrots, chopped",
+                    "½ cup beans, chopped",
+                    "1 green chili, chopped",
+                    "1 tsp mustard seeds",
+                    "1 tbsp grated coconut",
+                    "1 tsp coconut oil",
+                    "Salt to taste"
+                ],
+                "instructions": [
+                    "Heat oil, add mustard seeds and green chili.",
+                    "Add carrots, beans, and salt. Stir-fry for 7-10 minutes.",
+                    "Sprinkle grated coconut, mix well, and serve."
+                ]
+            },
+            "Quinoa Khichdi": {
+                "serves": "3",
+                "prepTime": "10 minutes",
+                "cookTime": "20 minutes",
+                "ingredients": [
+                    "½ cup quinoa",
+                    "¼ cup moong dal",
+                    "½ tsp cumin seeds",
+                    "1 tsp ginger, grated",
+                    "1 small carrot, chopped",
+                    "½ tsp turmeric powder",
+                    "Salt to taste",
+                    "1 tsp ghee or coconut oil",
+                    "2 cups water"
+                ],
+                "instructions": [
+                    "Rinse quinoa and moong dal together.",
+                    "Heat oil, add cumin seeds and ginger. Sauté for a minute.",
+                    "Add carrots, quinoa, moong dal, turmeric, and salt. Stir well.",
+                    "Add water and pressure cook for 2 whistles.",
+                    "Serve hot."
+                ]
+            },
+            "Poha": {
+                "serves": "3",
+                "prepTime": "10 minutes",
+                "cookTime": "10 minutes",
+                "ingredients": [
+                    "1 cup flattened rice (poha)",
+                    "½ tsp mustard seeds",
+                    "1 green chili, chopped",
+                    "½ cup onion, chopped",
+                    "½ cup mixed vegetables (carrot, peas, beans)",
+                    "¼ cup roasted peanuts",
+                    "1 tsp turmeric powder",
+                    "Salt to taste",
+                    "1 tsp lemon juice",
+                    "1 tsp coconut oil"
+                ],
+                "instructions": [
+                    "Rinse poha in water and drain.",
+                    "Heat oil, add mustard seeds, green chili, and onion. Sauté until soft.",
+                    "Add vegetables, turmeric, and salt. Cook for 5 minutes.",
+                    "Add poha and roasted peanuts. Mix well.",
+                    "Drizzle lemon juice before serving."
+                ]
+            },
+            "Peanut Chutney": {
+                "serves": "3",
+                "prepTime": "5 minutes",
+                "cookTime": "5 minutes",
+                "ingredients": [
+                    "½ cup roasted peanuts",
+                    "1 green chili",
+                    "1 small garlic clove",
+                    "1 tsp tamarind pulp",
+                    "Salt to taste",
+                    "½ tsp mustard seeds",
+                    "1 tsp coconut oil"
+                ],
+                "instructions": [
+                    "Grind peanuts, chili, garlic, tamarind, and salt into a smooth paste with little water.",
+                    "Heat oil, add mustard seeds, and pour over chutney.",
+                    "Serve with dosa or idli."
+                ]
+            },
+            "Spinach Stir-Fry with Soya": {
+                "serves": "3",
+                "prepTime": "10 minutes",
+                "cookTime": "10 minutes",
+                "ingredients": [
+                    "2 cups spinach, chopped",
+                    "½ cup soya chunks, soaked and drained",
+                    "1 small onion, chopped",
+                    "1 tsp ginger-garlic paste",
+                    "½ tsp cumin seeds",
+                    "1 tsp oil",
+                    "Salt to taste"
+                ],
+                "instructions": [
+                    "Heat oil, add cumin seeds and ginger-garlic paste.",
+                    "Add onions and sauté until golden.",
+                    "Add spinach, soya chunks, and salt. Stir-fry for 5-7 minutes.",
+                    "Serve hot."
+                ]
+            },
+            "Rajma Curry": {
+                "serves": "3",
+                "prepTime": "10 minutes (plus soaking time)",
+                "cookTime": "30 minutes",
+                "ingredients": [
+                    "½ cup rajma (kidney beans), soaked overnight",
+                    "1 small onion, chopped",
+                    "1 small tomato, chopped",
+                    "1 tsp ginger-garlic paste",
+                    "½ tsp cumin seeds",
+                    "½ tsp turmeric powder",
+                    "½ tsp garam masala",
+                    "Salt to taste",
+                    "1 tsp oil"
+                ],
+                "instructions": [
+                    "Pressure cook rajma until soft.",
+                    "Heat oil, add cumin, onions, and ginger-garlic paste. Sauté until golden.",
+                    "Add tomatoes, turmeric, garam masala, and salt. Cook until soft.",
+                    "Add cooked rajma and simmer for 10 minutes.",
+                    "Serve hot with rice."
+                ]
+            },
+            "Moong Dal Dosa": {
+                "serves": "3",
+                "prepTime": "10 minutes (plus soaking time)",
+                "cookTime": "10 minutes",
+                "ingredients": [
+                    "½ cup moong dal, soaked for 3 hours",
+                    "1 green chili",
+                    "½ tsp cumin seeds",
+                    "Salt to taste",
+                    "Oil for cooking"
+                ],
+                "instructions": [
+                    "Grind moong dal with chili, cumin, and salt into a smooth batter.",
+                    "Heat a tawa, pour batter, and spread into a thin dosa.",
+                    "Cook with a little oil until golden brown.",
+                    "Serve hot with chutney."
+                ]
+            },
+            "Stuffed Multigrain Paratha": {
+                "serves": "2-3",
+                "prepTime": "15 minutes",
+                "cookTime": "20 minutes",
+                "ingredients": [
+                    "1 cup whole wheat flour",
+                    "½ cup multigrain flour",
+                    "½ tsp cumin powder",
+                    "1 tsp ginger-garlic paste",
+                    "1 cup finely chopped spinach",
+                    "1 tbsp chopped coriander leaves",
+                    "1 tbsp finely chopped onions",
+                    "1-2 green chilies, chopped",
+                    "Salt to taste",
+                    "Water for kneading",
+                    "1 tsp oil (optional for cooking)"
+                ],
+                "instructions": [
+                    "Prepare dough: In a bowl, combine whole wheat flour, multigrain flour, cumin powder, and salt. Add water little by little to make a soft dough. Set aside.",
+                    "Prepare filling: Heat a pan, add chopped onions, green chilies, ginger-garlic paste, and sauté. Add chopped spinach, coriander leaves, salt, and cook for 5-7 minutes until soft.",
+                    "Stuff the dough: Roll out the dough into small balls, stuff with the prepared spinach filling, and roll them out into parathas.",
+                    "Cook: Heat a tawa and cook the parathas on both sides, applying a small amount of oil if desired.",
+                    "Serve hot with low-fat yogurt or pickle."
+                ]
+            },
+            "Besan Chilla": {
+                "serves": "2-3",
+                "prepTime": "10 minutes",
+                "cookTime": "10 minutes",
+                "ingredients": [
+                    "1 cup besan (chickpea flour)",
+                    "½ cup water (adjust consistency)",
+                    "½ tsp turmeric powder",
+                    "1 tsp cumin seeds",
+                    "1 green chili, chopped",
+                    "1 tbsp chopped coriander leaves",
+                    "1 small onion, chopped",
+                    "Salt to taste",
+                    "1 tsp oil (optional for cooking)"
+                ],
+                "instructions": [
+                    "Prepare batter: In a bowl, mix besan, turmeric, cumin seeds, chopped onions, green chili, coriander, and salt. Add water to make a smooth batter.",
+                    "Cook chilla: Heat a tawa, pour a ladle of batter, and spread it into a round shape. Drizzle oil if desired, and cook on both sides until golden.",
+                    "Serve hot with green chutney or low-fat yogurt."
+                ]
+            },
+            "Sautéed Cabbage": {
+                "serves": "2-3",
+                "prepTime": "5 minutes",
+                "cookTime": "10 minutes",
+                "ingredients": [
+                    "2 cups shredded cabbage",
+                    "1 small onion, chopped",
+                    "1-2 green chilies, chopped",
+                    "½ tsp mustard seeds",
+                    "½ tsp cumin seeds",
+                    "½ tsp turmeric powder",
+                    "Salt to taste",
+                    "1 tsp oil (coconut or olive oil)"
+                ],
+                "instructions": [
+                    "Heat oil in a pan and add mustard seeds, cumin seeds. Once they splutter, add onions and green chilies.",
+                    "Sauté onions until golden. Add turmeric powder and shredded cabbage. Stir well.",
+                    "Cook for 8-10 minutes, stirring occasionally. Add salt to taste.",
+                    "Serve hot with roti or rice."
+                ]
+            },
+            "Methi Thepla with Curd": {
+                "serves": "2-3",
+                "prepTime": "10 minutes",
+                "cookTime": "15 minutes",
+                "ingredients": [
+                    "1 cup whole wheat flour",
+                    "½ cup finely chopped methi (fenugreek leaves)",
+                    "1 tsp ginger-garlic paste",
+                    "1 tsp cumin powder",
+                    "½ tsp turmeric powder",
+                    "1 tbsp chopped coriander leaves",
+                    "Salt to taste",
+                    "Water for kneading",
+                    "1 tsp oil (optional for cooking)",
+                    "Low-fat yogurt for serving"
+                ],
+                "instructions": [
+                    "Prepare dough: In a bowl, mix whole wheat flour, methi leaves, cumin powder, turmeric powder, coriander leaves, and salt. Add water to make a soft dough.",
+                    "Roll out the dough into thin, round theplas.",
+                    "Cook: Heat a tawa, cook each thepla on both sides with a small amount of oil if desired.",
+                    "Serve hot with low-fat yogurt."
+                ]
+            },
+            "Palak Sabzi": {
+                "serves": "2-3",
+                "prepTime": "5 minutes",
+                "cookTime": "10 minutes",
+                "ingredients": [
+                    "2 cups spinach (palak), chopped",
+                    "1 small onion, chopped",
+                    "2 garlic cloves, chopped",
+                    "1 green chili, chopped",
+                    "½ tsp cumin seeds",
+                    "½ tsp turmeric powder",
+                    "Salt to taste",
+                    "1 tsp oil (coconut or olive oil)"
+                ],
+                "instructions": [
+                    "Heat oil in a pan, add cumin seeds, garlic, and green chili. Sauté for a minute.",
+                    "Add onions and cook until golden. Add turmeric powder and chopped spinach.",
+                    "Cook for 5-7 minutes until spinach wilts and softens.",
+                    "Serve hot with roti or rice."
+                ]
+            }
+        };
+
+        function generateTabs() {
+            const tabsContainer = document.getElementById("tabs-container");
+            const contentContainer = document.getElementById("diet-content");
+
+            // Clear previous tabs & content
+            tabsContainer.innerHTML = "";
+            contentContainer.innerHTML = "";
+
+            // Add Diet Plan Tabs
+            Object.keys(dietPlans).forEach((planName, index) => {
+                // Create Tab Button
+                const tab = document.createElement("div");
+                tab.className = "tab" + (index === 0 ? " active" : "");
+                tab.innerText = planName;
+                tab.onclick = () => showTab(planName);
+                tabsContainer.appendChild(tab);
+
+                // Create Tab Content Div
+                const contentDiv = document.createElement("div");
+                contentDiv.id = planName.replace(/\s+/g, "-").toLowerCase();
+                contentDiv.className = "tab-content" + (index === 0 ? " active" : "");
+                contentContainer.appendChild(contentDiv);
+
+                // Generate Table for Each Diet Plan
+                generateTable(planName);
+            });
+
+            // Add Recipes Tab
+            const recipesTab = document.createElement("div");
+            recipesTab.className = "tab view-recipes"; // Add the unique class
+            recipesTab.innerText = "CookBook";
+            recipesTab.onclick = () => showRecipes();
+            tabsContainer.appendChild(recipesTab);
+        }
+
+        function generateTable(planType) {
+            let output = `<table><tr><th>Day</th><th>Meal</th><th>Menu</th><th>Quantity (g)</th><th>Calories</th><th>Protein (g)</th><th>Fat (g)</th><th>Fiber (g)</th></tr>`;
+
+            const plan = dietPlans[planType];
+            for (const [day, meals] of Object.entries(plan)) {
+                let totalCalories = 0, totalProtein = 0, totalFat = 0, totalFiber = 0, totalQuantity = 0;
+                meals.forEach((meal, index) => {
+                    output += `<tr class="${day.toLowerCase()}">`;
+                    if (index === 0) output += `<td rowspan="${meals.length + 2}">${day}</td>`;
+                    output += `<td>${meal[0]}</td><td>${meal[1]}</td><td>${meal[2]}</td><td>${meal[3]}</td><td>${meal[4]}</td><td>${meal[5]}</td><td>${meal[6]}</td></tr>`;
+
+                    totalCalories += meal[3];
+                    totalProtein += meal[4];
+                    totalFat += meal[5];
+                    totalFiber += meal[6];
+
+                    let quantities = meal[2].split("+").map(q => parseInt(q.trim(), 10) || 0);
+                    totalQuantity += quantities.reduce((a, b) => a + b, 0);
+                });
+
+                output += `<tr class="total-row"><td colspan="2">Total</td><td>${totalQuantity}</td><td>${totalCalories}</td><td>${totalProtein}</td><td>${totalFat}</td><td>${totalFiber}</td></tr>`;
+                output += `<tr class="empty-row"><td colspan="8"></td></tr>`;
+            }
+            output += `</table>`;
+
+            document.getElementById(planType.replace(/\s+/g, "-").toLowerCase()).innerHTML = output;
+        }
+
+        function showTab(planName) {
+            // Remove active class from all tabs
+            document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+            document.querySelectorAll(".tab-content").forEach(content => content.classList.remove("active"));
+
+            // Add active class to the clicked tab
+            document.querySelectorAll(".tab").forEach(tab => {
+                if (tab.innerText === planName) {
+                    tab.classList.add("active");
+                }
+            });
+
+            // Show corresponding content
+            document.getElementById(planName.replace(/\s+/g, "-").toLowerCase()).classList.add("active");
+        }
+
+        function showRecipes() {
+            // Remove active class from all tabs
+            document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+            document.querySelectorAll(".tab-content").forEach(content => content.classList.remove("active"));
+
+            // Add active class to the Recipes tab
+            document.querySelectorAll(".tab").forEach(tab => {
+                if (tab.innerText === "CookBook") {
+                    tab.classList.add("active");
+                }
+            });
+
+            // Show recipes content
+            document.getElementById("recipes-content").classList.add("active");
+
+            // Generate recipes list
+            generateRecipes();
+        }
+
+        function generateRecipes() {
+            const recipeContainer = document.getElementById("recipe-container");
+            recipeContainer.innerHTML = "";
+
+            Object.entries(recipes).forEach(([recipeName, recipeDetails]) => {
+                const recipeItem = document.createElement("div");
+                recipeItem.className = "recipe-item";
+
+                // Sanitize recipe name for use in ID
+                const sanitizedRecipeName = recipeName.replace(/[^a-zA-Z0-9-]/g, "-").toLowerCase();
+
+                const recipeTitle = document.createElement("div");
+                recipeTitle.className = "recipe-title";
+                recipeTitle.innerText = recipeName;
+                recipeTitle.onclick = () => toggleRecipeDetails(sanitizedRecipeName);
+
+                const recipeDetailsDiv = document.createElement("div");
+                recipeDetailsDiv.className = "recipe-details";
+                recipeDetailsDiv.id = `recipe-${sanitizedRecipeName}`;
+
+                // Add recipe details
+                recipeDetailsDiv.innerHTML = `
+            <p><strong>Serves:</strong> ${recipeDetails.serves}</p>
+            <p><strong>Prep Time:</strong> ${recipeDetails.prepTime}</p>
+            <p><strong>Cook Time:</strong> ${recipeDetails.cookTime}</p>
+            <h4>Ingredients:</h4>
+            <ul>
+                ${recipeDetails.ingredients.map(ingredient => `<li>${ingredient}</li>`).join("")}
+            </ul>
+            <h4>Instructions:</h4>
+            <ol>
+                ${recipeDetails.instructions.map(step => `<li>${step}</li>`).join("")}
+            </ol>
+        `;
+
+                recipeItem.appendChild(recipeTitle);
+                recipeItem.appendChild(recipeDetailsDiv);
+                recipeContainer.appendChild(recipeItem);
+            });
+        }
+
+        function toggleRecipeDetails(sanitizedRecipeName) {
+            const recipeTitle = document.querySelector(`#recipe-${sanitizedRecipeName}`).previousElementSibling;
+            const recipeDetails = document.getElementById(`recipe-${sanitizedRecipeName}`);
+
+            // Toggle active class for recipe title and details
+            recipeTitle.classList.toggle("active");
+            recipeDetails.classList.toggle("active");
+        }
+
+        function filterRecipes() {
+            const searchTerm = document.getElementById("recipe-search").value.toLowerCase();
+            const recipeItems = document.querySelectorAll(".recipe-item");
+
+            recipeItems.forEach(item => {
+                const recipeName = item.querySelector(".recipe-title").innerText.toLowerCase();
+                if (recipeName.includes(searchTerm)) {
+                    item.style.display = "block";
+                } else {
+                    item.style.display = "none";
+                }
+            });
+        }
+
+        // Initialize Tabs & Tables
+        generateTabs();
+    </script>
+</body>
+
+</html>
