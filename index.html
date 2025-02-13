@@ -45,35 +45,129 @@
         /* Mobile devices */
         @media (max-width: 480px) {
             .container {
-                width: 100%;
-                padding: 5px;
+                padding: 10px;
             }
 
             .diet-table {
-                font-size: 12px;
+                font-size: 14px;
+                /* Slightly larger font */
             }
 
             .diet-table th,
             .diet-table td {
-                padding: 5px;
                 display: block;
+                width: 100%;
                 text-align: left;
-            }
-
-            .diet-table thead {
-                display: none;
+                padding: 8px;
+                box-sizing: border-box;
             }
 
             .diet-table tr {
-                display: flex;
-                flex-direction: column;
+                display: block;
+                margin-bottom: 15px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+            }
+
+            .diet-table td:before {
+                content: attr(data-label);
+                float: left;
+                font-weight: bold;
+                margin-right: 10px;
+            }
+
+            .diet-table td {
                 border-bottom: 1px solid #ddd;
-                margin-bottom: 10px;
+                position: relative;
+                padding-left: 40%;
+            }
+
+            .diet-table td:last-child {
+                border-bottom: 0;
+            }
+
+            .diet-table .total-row td {
+                text-align: center;
+                font-size: 13px;
+                padding: 8px;
+                display: block;
+            }
+
+            .search-container input {
+                width: 100%;
                 padding: 10px;
+            }
+
+            .recipe-title {
+                padding: 12px;
+                font-size: 15px;
+            }
+
+            .recipe-details {
+                padding: 12px;
+            }
+
+            .hints ul,
+            .hints ol {
+                padding-left: 25px;
+            }
+
+            /* Add data labels for table cells */
+            .diet-table td:nth-child(1):before {
+                content: "Meal: ";
+            }
+
+            .diet-table td:nth-child(2):before {
+                content: "Menu: ";
+            }
+
+            .diet-table td:nth-child(3):before {
+                content: "Quantity: ";
+            }
+
+            .diet-table td:nth-child(4):before {
+                content: "Calories: ";
+            }
+
+            .diet-table td:nth-child(5):before {
+                content: "Protein: ";
+            }
+
+            .diet-table td:nth-child(6):before {
+                content: "Fat: ";
+            }
+
+            .diet-table td:nth-child(7):before {
+                content: "Fiber: ";
             }
         }
 
+        /* Smaller Mobile Devices */
+        @media (max-width: 360px) {
+            .container {
+                padding: 5px;
+            }
 
+            .diet-table td {
+                font-size: 13px;
+                padding-left: 35%;
+            }
+
+            .recipe-title {
+                font-size: 14px;
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            .table-container {
+                overflow-x: auto;
+            }
+
+            table {
+                width: 600px;
+                /* Ensures the table maintains its layout */
+            }
+        }
 
         body {
             font-family: Arial, sans-serif;
@@ -82,6 +176,7 @@
         }
 
         .container {
+            overflow-x: auto;
             max-width: 1000px;
             margin: auto;
             background: white;
@@ -152,21 +247,30 @@
             background-color: #f8d7da;
         }
 
+        .table-container {
+            overflow-x: auto;
+            /* margin: auto; */
+            /* background: white; */
+            /* padding: 20px; */
+            /* border-radius: 10px; */
+            /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); */
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            min-width: 600px;
         }
 
         th,
         td {
-            border: 1px solid #ddd;
+            border: 1px solid #423131;
             padding: 10px;
             text-align: center;
         }
 
         th {
-            background-color: #007bff;
+            background-color: #0f2a47;
             color: white;
         }
 
@@ -1671,7 +1775,7 @@
                 meals.forEach((meal, index) => {
                     output += `<tr class="${day.toLowerCase()}">`;
                     if (index === 0) output += `<td rowspan="${meals.length + 2}">${day}</td>`;
-                    output += `<td>${meal[0]}</td><td>${meal[1]}</td><td>${meal[2]}</td><td>${meal[3]}</td><td>${meal[4]}</td><td>${meal[5]}</td><td>${meal[6]}</td></tr>`;
+                    output += `<td data-label="Meal">${meal[0]}</td><td data-label="Menu">${meal[1]}</td><td data-label="Quantity">${meal[2]}</td><td data-label="Calories">${meal[3]}</td><td data-label="Protein">${meal[4]}</td><td data-label="Fat">${meal[5]}</td><td data-label="Fiber">${meal[6]}</td></tr>`;
 
                     totalCalories += meal[3];
                     totalProtein += meal[4];
