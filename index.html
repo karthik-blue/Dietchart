@@ -491,6 +491,57 @@
     <script>
         // Diet Plan Data
         const dietPlans = {
+             "Lean Liver": {
+                "Monday": [
+                    ["Breakfast", "Pongal + Coconut chutney + 1 boiled egg", "200g + 50g", 350, 15, 8, 4],
+                    ["Mid-Morning", "1 small apple (100g) + 10 almonds (10g)", "100g + 10g", 138, 3, 8, 5], // Corrected: 10 almonds (not 15)
+                    ["Lunch", "Brown rice (100g) + Sambar with soya chunks (30g) + Beetroot poriyal + Curd", "100g + 150g + 100g + 100g", 445, 25, 6, 9], // Adjusted protein
+                    ["Evening Snack", "Green tea + Roasted chana (30g)", "200ml + 30g", 100, 5, 2, 3],
+                    ["Dinner", "Chapati (2) + Lauki curry + Curd", "60g + 150g + 100g", 350, 12, 6, 6]
+                ],
+                "Tuesday": [
+                    ["Breakfast", "Idli (4) with mint chutney + 1 boiled egg", "150g + 50g", 300, 15, 5, 4],
+                    ["Mid-Morning", "1 orange (100g) + 1 tsp flaxseeds (5g)", "100g + 5g", 100, 2, 3, 4],
+                    ["Lunch", "Brown rice (100g) + Fish curry (100g) + Cabbage thoran + Curd", "100g + 100g + 100g + 100g", 480, 28, 10, 8], // Fish added
+                    ["Evening Snack", "Buttermilk (200ml) + Peanuts (20g)", "200ml + 20g", 150, 6, 8, 3],
+                    ["Dinner", "Quinoa upma (200g) + Curd", "200g + 100g", 350, 12, 6, 6]
+                ],
+                "Wednesday": [
+                    ["Breakfast", "Ragi dosa (2) with tomato chutney + 1 boiled egg", "150g + 50g", 350, 15, 7, 6],
+                    ["Mid-Morning", "1 small banana (100g) + 1 tsp chia seeds (5g)", "100g + 5g", 120, 2, 3, 5],
+                    ["Lunch", "Millet rice (100g) + Avial (150g) + Cucumber raita", "100g + 150g + 100g", 400, 12, 6, 8],
+                    ["Evening Snack", "Green tea + Pumpkin seeds (20g)", "200ml + 20g", 100, 5, 5, 3],
+                    ["Dinner", "Chapati (2) + Spinach dal (150g) + Steamed broccoli (100g)", "60g + 150g + 100g", 360, 15, 6, 8]
+                ],
+                "Thursday": [
+                    ["Breakfast", "Oats upma (200g) + Coconut chutney + 1 boiled egg", "200g + 50g", 350, 15, 7, 6],
+                    ["Mid-Morning", "1 guava (100g) + 10 almonds (10g)", "100g + 10g", 138, 3, 8, 5], // Corrected almonds
+                    ["Lunch", "Brown rice (100g) + Soya chunk curry (50g) + Carrot beans poriyal + Curd", "100g + 50g + 100g + 100g", 480, 30, 8, 10], // Chicken replaced with soya
+                    ["Evening Snack", "Buttermilk (200ml) + Roasted chana (30g)", "200ml + 30g", 150, 6, 5, 4],
+                    ["Dinner", "Quinoa khichdi (200g) + Curd", "200g + 100g", 350, 15, 6, 7]
+                ],
+                "Friday": [
+                    ["Breakfast", "Poha (100g) with veggies + Coconut chutney + 1 boiled egg", "100g + 50g", 350, 15, 7, 5],
+                    ["Mid-Morning", "1 small apple (100g) + 1 tsp flaxseeds (5g)", "100g + 5g", 120, 2, 3, 5],
+                    ["Lunch", "Brown rice (100g) + Sambar with soya (30g) + Okra fry + Curd", "100g + 150g + 100g + 100g", 450, 18, 6, 8],
+                    ["Evening Snack", "Green tea + Sunflower seeds (20g)", "200ml + 20g", 100, 4, 5, 3],
+                    ["Dinner", "Chapati (2) + Lauki curry + Steamed carrots (100g)", "60g + 150g + 100g", 350, 12, 6, 7]
+                ],
+                "Saturday": [
+                    ["Breakfast", "Ragi dosa (2) with mint chutney + 1 boiled egg", "150g + 50g", 350, 15, 7, 6],
+                    ["Mid-Morning", "1 orange (100g) + 10 almonds (10g)", "100g + 10g", 138, 3, 8, 5],
+                    ["Lunch", "Millet rice (100g) + Sambar with soya (30g) + Beetroot poriyal + Curd", "100g + 150g + 100g + 100g", 450, 18, 6, 8],
+                    ["Evening Snack", "Buttermilk (200ml) + Peanuts (20g)", "200ml + 20g", 150, 6, 8, 3],
+                    ["Dinner", "Quinoa upma (200g) + Curd", "200g + 100g", 350, 12, 6, 6]
+                ],
+                "Sunday": [
+                    ["Breakfast", "Idli (4) with tomato chutney + 1 boiled egg", "150g + 50g", 300, 15, 5, 4],
+                    ["Mid-Morning", "1 guava (100g) + 1 tsp chia seeds (5g)", "100g + 5g", 120, 2, 3, 5],
+                    ["Lunch", "Brown rice (100g) + Fish curry (100g) + Cabbage thoran + Curd", "100g + 100g + 100g + 100g", 500, 25, 10, 6], // Fish retained
+                    ["Evening Snack", "Green tea + Roasted chana (30g)", "200ml + 30g", 100, 5, 2, 3],
+                    ["Dinner", "Chapati (2) + Spinach dal (150g) + Steamed broccoli (100g)", "60g + 150g + 100g", 350, 15, 6, 7]
+                ]
+            },
             "Soya South": {
                 "Monday": [
                     ["Breakfast", "Idli with coconut chutney & soya", "2 idli (100 g) + 20 g chutney + 10 g soya", 220, 10, 5, 2],
@@ -543,57 +594,6 @@
                 ]
             },
             "Healthy South": { "Monday": [["Breakfast", "Pongal + Coconut chutney + 1 boiled egg", "200 + 50", 350, 15, 8, 4], ["Mid-Morning", "1 small apple + 10 almonds", "100 + 10", 150, 3, 8, 5], ["Lunch", "Brown rice + Sambar + Beetroot poriyal + Curd", "150 + 100 + 100 + 100", 450, 18, 6, 8], ["Evening Snack", "Green tea + Roasted chana", "200 + 30", 100, 5, 2, 3], ["Dinner", "Chapati (2) + Lauki curry + Curd", "60 + 150 + 100", 350, 12, 6, 6]], "Tuesday": [["Breakfast", "Idli (4) with mint chutney + 1 boiled egg", "150 + 50", 300, 15, 5, 4], ["Mid-Morning", "1 orange + 1 tsp flaxseeds", "100 + 5", 100, 2, 3, 4], ["Lunch", "Brown rice + Fish curry (1 piece) + Cabbage thoran + Curd", "150 + 100 + 100 + 100", 500, 25, 10, 6], ["Evening Snack", "Buttermilk + Peanuts", "200 + 20", 150, 6, 8, 3], ["Dinner", "Quinoa upma + Curd", "200 + 100", 350, 12, 6, 6]], "Wednesday": [["Breakfast", "Ragi dosa (2) with tomato chutney + 1 boiled egg", "150 + 50", 350, 15, 7, 6], ["Mid-Morning", "1 small banana + 1 tsp chia seeds", "100 + 5", 120, 2, 3, 5], ["Lunch", "Millet rice + Avial + Cucumber raita", "150 + 150 + 100", 400, 12, 6, 8], ["Evening Snack", "Green tea + Pumpkin seeds", "200 + 20", 100, 5, 5, 3], ["Dinner", "Chapati (2) + Spinach dal + Steamed broccoli", "60 + 150 + 100", 350, 15, 6, 7]], "Thursday": [["Breakfast", "Oats upma + Coconut chutney + 1 boiled egg", "200 + 50", 350, 15, 7, 6], ["Mid-Morning", "1 guava + 10 almonds", "100 + 10", 150, 3, 8, 5], ["Lunch", "Brown rice + Chicken curry + Carrot beans poriyal + Curd", "150 + 100 + 100 + 100", 500, 25, 10, 6], ["Evening Snack", "Buttermilk (1 glass) + 1 small handful of roasted chana", "200 + 30", 150, 6, 5, 4], ["Dinner", "Quinoa khichdi + Curd", "200 + 100", 350, 15, 6, 7]], "Friday": [["Breakfast", "Poha (flattened rice, veggies, peanuts) + Coconut chutney + 1 boiled egg", "200 + 50", 350, 15, 7, 5], ["Mid-Morning", "1 small apple + 1 tsp flaxseeds", "100 + 5", 120, 2, 3, 5], ["Lunch", "Brown rice + Sambar (toor dal, veggies) + Okra fry + Curd", "150 + 100 + 100 + 100", 450, 18, 6, 8], ["Evening Snack", "Green tea + 1 small handful of sunflower seeds", "200 + 20", 100, 4, 5, 3], ["Dinner", "Chapati (2) + Lauki (bottle gourd) curry + Steamed carrots", "60 + 150 + 100", 350, 12, 6, 7]], "Saturday": [["Breakfast", "Ragi dosa (2) with mint chutney + 1 boiled egg", "150 + 50", 350, 15, 7, 6], ["Mid-Morning", "1 orange + 10 almonds", "100 + 10", 150, 3, 8, 5], ["Lunch", "Millet rice + Sambar (toor dal, veggies) + Beetroot poriyal + Curd", "150 + 100 + 100 + 100", 450, 18, 6, 8], ["Evening Snack", "Buttermilk (1 glass) + 1 small handful of peanuts", "200 + 20", 150, 6, 8, 3], ["Dinner", "Quinoa upma (veggies, quinoa) + Curd", "200 + 100", 350, 12, 6, 6]], "Sunday": [["Breakfast", "Idli (4) with tomato chutney + 1 boiled egg", "150 + 50", 300, 15, 5, 4], ["Mid-Morning", "1 guava + 1 tsp chia seeds", "100 + 5", 120, 2, 3, 5], ["Lunch", "Brown rice + Fish curry (1 piece) + Cabbage thoran + Curd", "150 + 100 + 100 + 100", 500, 25, 10, 6], ["Evening Snack", "Green tea + 1 small handful of roasted chana", "200 + 30", 100, 5, 2, 3], ["Dinner", "Chapati (2) + Spinach dal + Steamed broccoli", "60 + 150 + 100", 350, 15, 6, 7]] },
-            "Lean Liver": {
-                "Monday": [
-                    ["Breakfast", "Pongal + Coconut chutney + 1 boiled egg", "200g + 50g", 350, 15, 8, 4],
-                    ["Mid-Morning", "1 small apple (100g) + 10 almonds (10g)", "100g + 10g", 138, 3, 8, 5], // Corrected: 10 almonds (not 15)
-                    ["Lunch", "Brown rice (100g) + Sambar with soya chunks (30g) + Beetroot poriyal + Curd", "100g + 150g + 100g + 100g", 445, 25, 6, 9], // Adjusted protein
-                    ["Evening Snack", "Green tea + Roasted chana (30g)", "200ml + 30g", 100, 5, 2, 3],
-                    ["Dinner", "Chapati (2) + Lauki curry + Curd", "60g + 150g + 100g", 350, 12, 6, 6]
-                ],
-                "Tuesday": [
-                    ["Breakfast", "Idli (4) with mint chutney + 1 boiled egg", "150g + 50g", 300, 15, 5, 4],
-                    ["Mid-Morning", "1 orange (100g) + 1 tsp flaxseeds (5g)", "100g + 5g", 100, 2, 3, 4],
-                    ["Lunch", "Brown rice (100g) + Fish curry (100g) + Cabbage thoran + Curd", "100g + 100g + 100g + 100g", 480, 28, 10, 8], // Fish added
-                    ["Evening Snack", "Buttermilk (200ml) + Peanuts (20g)", "200ml + 20g", 150, 6, 8, 3],
-                    ["Dinner", "Quinoa upma (200g) + Curd", "200g + 100g", 350, 12, 6, 6]
-                ],
-                "Wednesday": [
-                    ["Breakfast", "Ragi dosa (2) with tomato chutney + 1 boiled egg", "150g + 50g", 350, 15, 7, 6],
-                    ["Mid-Morning", "1 small banana (100g) + 1 tsp chia seeds (5g)", "100g + 5g", 120, 2, 3, 5],
-                    ["Lunch", "Millet rice (100g) + Avial (150g) + Cucumber raita", "100g + 150g + 100g", 400, 12, 6, 8],
-                    ["Evening Snack", "Green tea + Pumpkin seeds (20g)", "200ml + 20g", 100, 5, 5, 3],
-                    ["Dinner", "Chapati (2) + Spinach dal (150g) + Steamed broccoli (100g)", "60g + 150g + 100g", 360, 15, 6, 8]
-                ],
-                "Thursday": [
-                    ["Breakfast", "Oats upma (200g) + Coconut chutney + 1 boiled egg", "200g + 50g", 350, 15, 7, 6],
-                    ["Mid-Morning", "1 guava (100g) + 10 almonds (10g)", "100g + 10g", 138, 3, 8, 5], // Corrected almonds
-                    ["Lunch", "Brown rice (100g) + Soya chunk curry (50g) + Carrot beans poriyal + Curd", "100g + 50g + 100g + 100g", 480, 30, 8, 10], // Chicken replaced with soya
-                    ["Evening Snack", "Buttermilk (200ml) + Roasted chana (30g)", "200ml + 30g", 150, 6, 5, 4],
-                    ["Dinner", "Quinoa khichdi (200g) + Curd", "200g + 100g", 350, 15, 6, 7]
-                ],
-                "Friday": [
-                    ["Breakfast", "Poha (100g) with veggies + Coconut chutney + 1 boiled egg", "100g + 50g", 350, 15, 7, 5],
-                    ["Mid-Morning", "1 small apple (100g) + 1 tsp flaxseeds (5g)", "100g + 5g", 120, 2, 3, 5],
-                    ["Lunch", "Brown rice (100g) + Sambar with soya (30g) + Okra fry + Curd", "100g + 150g + 100g + 100g", 450, 18, 6, 8],
-                    ["Evening Snack", "Green tea + Sunflower seeds (20g)", "200ml + 20g", 100, 4, 5, 3],
-                    ["Dinner", "Chapati (2) + Lauki curry + Steamed carrots (100g)", "60g + 150g + 100g", 350, 12, 6, 7]
-                ],
-                "Saturday": [
-                    ["Breakfast", "Ragi dosa (2) with mint chutney + 1 boiled egg", "150g + 50g", 350, 15, 7, 6],
-                    ["Mid-Morning", "1 orange (100g) + 10 almonds (10g)", "100g + 10g", 138, 3, 8, 5],
-                    ["Lunch", "Millet rice (100g) + Sambar with soya (30g) + Beetroot poriyal + Curd", "100g + 150g + 100g + 100g", 450, 18, 6, 8],
-                    ["Evening Snack", "Buttermilk (200ml) + Peanuts (20g)", "200ml + 20g", 150, 6, 8, 3],
-                    ["Dinner", "Quinoa upma (200g) + Curd", "200g + 100g", 350, 12, 6, 6]
-                ],
-                "Sunday": [
-                    ["Breakfast", "Idli (4) with tomato chutney + 1 boiled egg", "150g + 50g", 300, 15, 5, 4],
-                    ["Mid-Morning", "1 guava (100g) + 1 tsp chia seeds (5g)", "100g + 5g", 120, 2, 3, 5],
-                    ["Lunch", "Brown rice (100g) + Fish curry (100g) + Cabbage thoran + Curd", "100g + 100g + 100g + 100g", 500, 25, 10, 6], // Fish retained
-                    ["Evening Snack", "Green tea + Roasted chana (30g)", "200ml + 30g", 100, 5, 2, 3],
-                    ["Dinner", "Chapati (2) + Spinach dal (150g) + Steamed broccoli (100g)", "60g + 150g + 100g", 350, 15, 6, 7]
-                ]
-            },
             "Veg Palate": {
                 "Monday": [
                     ["Breakfast", "Ragi dosa with peanut chutney & soya chunks", "2 dosa (150 g) + 20 g chutney + 20 g soya", 320, 20, 8, 5],
